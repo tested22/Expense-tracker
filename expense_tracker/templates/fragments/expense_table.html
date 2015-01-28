@@ -1,0 +1,19 @@
+<!-- Expense Table -->
+<table id="expense_table" width="100%">
+    <col style="width:9%">
+    <col style="width:9%">
+    <col style="width:31%">
+    <col style="width:9%">
+    <col style="width:31%">
+    <col style="width:11%">
+    <thead>
+        <tr><th>Date</th><th>Time</th><th>Description</th><th>Amount</th><th>Comment</th><th>Options</th></tr>
+    </thead>
+    <tbody id="expense_table_body">
+    </tbody>
+</table>
+<button type="button" id="clear_filter_button" onclick="clear_filter()" class="btn btn-default" style="display:none">Clear Filter</button>
+<button type="button" onclick="show_add();" class="btn btn-default">Add Expense</button>
+<button type="button" onclick="show_filter();" class="btn btn-default">Filter Expenses</button>
+<button type="button" onclick="show_weekly_table();" class="btn btn-default">Weekly Report</button>
+<button type="button" onclick="logout();" class="btn btn-default">Logout</button>

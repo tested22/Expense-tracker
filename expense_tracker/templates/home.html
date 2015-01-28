@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+ <div id="div_filter" class="spa" style="display:none">
+    <h3>Filter Expenses</h3><hr/>
+    {% include "fragments/filter_form.html" %}
+  </div>
+
+  <div id="div_login" class="spa" style="display:none">
+    <h3>Login</h3><hr/>
+    {% include "fragments/login_form.html" %}
+  </div>
+
+  <div id="div_signup" class="spa" style="display:none">
+    <h3>Signup</h3><hr/>
+    {% include "fragments/signup_form.html" %}
+  </div>
+
+  <div id="div_expense_table" class="spa" style="display:none">
+    <h3>Expense Table</h3><hr/>
+    {% include "fragments/expense_table.html" %}
+  </div>
+
+  <div id="div_add" class="spa" style="display:none">
+    <h3>Add/Edit Expense</h3><hr/>
+    {% include "fragments/add_form.html" %}
+  </div>
+
+  <div id="div_weekly_table" class="spa" style="display:none">
+    <h3>Weekly Expense Report</h3><hr/>
+    {% include "fragments/weekly_table.html" %}
+  </div>
+{% endblock %}

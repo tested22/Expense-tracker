@@ -1,0 +1,49 @@
+<!-- Add/Edit Expense form -->
+<form class="form-horizontal ajax-post" id="add_form" role="form" action="api/expense/">
+  <div class="form-group">
+    <label for="date" class="col-sm-2 control-label">Date</label>
+    <div class="col-sm-10">
+      <input name="date" type="text" class="form-control" id="date" placeholder="yyyy-mm-dd" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="time" class="col-sm-2 control-label">Time</label>
+    <div class="col-sm-10">
+      <input name="time" type="text" class="form-control" id="time" placeholder="hh:mm" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="description" class="col-sm-2 control-label">Description</label>
+    <div class="col-sm-10">
+      <input name="description" type="text" class="form-control" id="description" placeholder="Description" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="amount" class="col-sm-2 control-label">Amount</label>
+    <div class="col-sm-10">
+      <input name="amount" type="text" class="form-control" id="amount" placeholder="Amount" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="comment" class="col-sm-2 control-label">Comment</label>
+    <div class="col-sm-10">
+      <input name="comment" type="text" class="form-control" id="comment" placeholder="Comment" value="">
+    </div>
+  </div>
+
+    <input name="id" type="hidden" id="id" value="">
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" id="form_add_button" class="btn btn-default">Submit</button>
+    </div>
+  </div>
+
+    <input name="user" type="hidden" id="user" value="{{ user.id }}">
+  <div class="form-group api-response"></div>
+</form>
+<button type="button" onclick="show_inuse_table();" class="btn btn-default">Back</button>

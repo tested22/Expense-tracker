@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Toptal Expense Tracker">
+
+    <title>Toptal Expense Tracker</title>
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+
+<body role="document">
+
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" id="get_started" data-toggle="dropdown" style="display:none">Get Started <span
+                        class="caret"></span></a>
+
+                <ul class="dropdown-menu" role="menu">
+                    <li><a onclick="show_signup()">Signup</a></li>
+                    <li><a onclick="show_login()">Login</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">Toptal Expense Tracker</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="container theme-showcase" role="main">
+    {% block content %}{% endblock %}
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var username = '{{ request.user.username }}';
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr) {
+            var csrftoken = getCookie('csrftoken');
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    });
+
+    var error_response = function (data) {
+        $('.api-response').html("API Response: " + data.status + ' ' + data.statusText + '<br/>Content: ' + data.responseText);
+    }
+
+    $().ready(function () {
+        $('form.ajax-post button[role="signup_login"]').click(function () {
+            var form = $(this).closest('form');
+            var requestType = 'POST';
+            var url = form.attr('action');
+            $.ajax(url,
+                    {
+                        type: requestType,
+                        data: form.serialize(),
+                        success: function (data) {
+                            $('.api-response').html('');
+                            show_new_table();
+                        },
+                        error: function (data) {
+                            error_response(data);
+                        }
+                    });
+            return false;
+        });
+
+        $('form.ajax-post button[id="form_add_button"]').click(function () {
+            var form = $(this).closest('form');
+            var requestType = 'POST';
+            var url = form.attr('action');
+            var id = form.children("[name='id']").attr('value');
+            if ( id ) {
+                requestType = 'PUT';
+                url += id + '/';
+            }
+            $.ajax(url,
+                    {
+                        type: requestType,
+                        data: form.serialize(),
+                        success: function (data) {
+                            $('.api-response').html('');
+                            show_new_table();
+                        },
+                        error: function (data) {
+                            error_response(data);
+                        }
+                    });
+            return false;
+        });
+
+        $('form.ajax-post button[id="form_filter_button"]').click(function () {
+            var form = $(this).closest('form');
+            var requestType = 'GET';
+            var url = form.attr('action');
+            $.ajax(url,
+                    {
+                        type: requestType,
+                        data: form.serialize(),
+                        success: function (data) {
+                            $('.api-response').html('');
+                            show_new_table(data);
+                            $('#clear_filter_button').css('display', 'block');
+                        },
+                        error: function (data) {
+                            error_response(data);
+                        }
+                    });
+            return false;
+        });
+        if (username) {
+            show_new_table();
+        } else {
+            show_login();
+        }
+    });
+
+    function time_to_string(data){
+        var day_or_night = " AM";
+        data = data.split(':');
+        var hour = Number(data[0]);
+        if (hour > 12){
+            hour -= 12;
+            day_or_night = " PM";
+        }
+        if (hour == 0){
+            hour = 12;
+        }
+        return String(hour) + ":" + data[1] + day_or_night;
+    }
+
+    function create_expense_table(data) {
+        var content = "<tbody id='expense_table_body'>";
+        for (var i = 0; i < data.length; i++) {
+            content += "<tr><td>" + data[i].date + "</td><td>" + time_to_string(data[i].time) + "</td>";
+            content += "<td>" + data[i].description + "</td><td>" + data[i].amount + "</td><td>" + data[i].comment + "</td>";
+            content += "<td><button type='button' onclick='show_edit(" + data[i].id + ");' class='btn btn-default' >Edit</button>";
+            content += "<button type='button' onclick='delete_expense(" + data[i].id + ");' class='btn btn-default'>Delete</button></td></tr>";
+        }
+        content += "</tbody>";
+        $('#expense_table_body').remove();
+        $('#expense_table').append(content);
+        $('#div_expense_table').css('display', 'block');
+    }
+
+    function create_weekly_table(data) {
+        hide_all();
+        var content = "<tbody id='weekly_table_body'>";
+        for (var i = 0; i < data.length; i++) {
+            content += "<tr><td>" + data[i].week_of + "</td><td>" + data[i].total + "</td><td>" + data[i].average + "</tr>";
+        }
+        content += "</tbody>";
+        $('#weekly_table_body').remove();
+        $('#weekly_table').append(content);
+        $('#div_weekly_table').css('display', 'block');
+    }
+
+    function show_inuse_table() {
+        hide_all();
+        $('#div_expense_table').css('display', 'block');
+    }
+
+    function show_new_table(data) {
+        hide_all();
+        $('#get_started').css('display', 'none');
+        if (typeof(data) === 'undefined') {
+            $.get('/api/expense/').success(function (data) {
+                create_expense_table(data);
+            });
+        }
+        else{
+            create_expense_table(data);
+        }
+    }
+
+    function show_weekly_table() {
+        $.ajax('/api/by_week/',
+            {
+                type: 'GET',
+                success: function(data) {
+                    create_weekly_table(data);
+                }
+            });
+    }
+
+    function delete_expense(id) {
+        $.ajax('/api/expense/' + id,
+            {
+                type: 'DELETE',
+                success: function() {
+                    $('.api-response').html('');
+                    show_new_table();
+                }
+            });
+    }
+
+    function hide_all() {
+        $('.spa').css('display', 'none');
+    }
+
+    function show_signup() {
+        hide_all();
+        $('#div_signup').css('display', 'block');
+    }
+
+    function show_login() {
+        hide_all();
+        $('#div_login').css('display', 'block');
+        $('#get_started').css('display', 'block');
+    }
+
+    function show_filter() {
+        hide_all();
+        $('#div_filter').css('display', 'block');
+    }
+
+    function show_add() {
+        hide_all();
+        $('#description').val('');
+        $('#amount').val('');
+        $('#comment').val('');
+        $('#date').val('');
+        $('#time').val('');
+        $('#id').val('');
+        $('#div_add').css('display', 'block');
+    }
+
+    function show_edit(id) {
+        hide_all();
+        $.get('/api/expense/' + id).done(function (data) {
+            $('#description').val(data.description);
+            $('#amount').val(data.amount);
+            $('#comment').val(data.comment);
+            $('#date').val(data.date);
+            $('#time').val(data.time);
+            $('#id').val(data.id);
+        });
+        $('#div_add').css('display', 'block');
+    }
+
+    function clear_filter(){
+        show_new_table();
+        $('#clear_filter_button').css('display', 'none');
+    }
+
+    function logout() {
+        $.post("/rest-auth/logout/").success(function() {
+            show_login();
+        });
+    }
+</script>
+{% block script %}{% endblock %}
+</body>
+</html>

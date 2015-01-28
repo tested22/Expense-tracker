@@ -1,0 +1,60 @@
+<!-- Add/Edit Expense form -->
+<form class="form-horizontal ajax-post" id="filter_form" role="form" action="api/expense/">
+  <div class="form-group">
+    <label for="min amount" class="col-sm-2 control-label">Min Amount</label>
+    <div class="col-sm-10">
+      <input name="min_amount" type="text" class="form-control" id="min_amount" placeholder="Min Amount" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="max_amount" class="col-sm-2 control-label">Max Amount</label>
+    <div class="col-sm-10">
+      <input name="max_amount" type="text" class="form-control" id="max_amount" placeholder="Max Amount" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="start_date" class="col-sm-2 control-label">Start Date</label>
+    <div class="col-sm-10">
+      <input name="start_date" type="text" class="form-control" id="start_date" placeholder="Start Date" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="end_date" class="col-sm-2 control-label">End Date</label>
+    <div class="col-sm-10">
+      <input name="end_date" type="text" class="form-control" id="end_date" placeholder="End Date" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="start_time" class="col-sm-2 control-label">Start Time</label>
+    <div class="col-sm-10">
+      <input name="start_time" type="text" class="form-control" id="start_time" placeholder="Start Time" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="end_time" class="col-sm-2 control-label">End Time</label>
+    <div class="col-sm-10">
+      <input name="end_time" type="text" class="form-control" id="end_time" placeholder="End Time" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="keywords" class="col-sm-2 control-label">Keywords</label>
+    <div class="col-sm-10">
+      <input name="keywords" type="text" class="form-control" id="keywords" placeholder="Keywords" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" id="form_filter_button" class="btn btn-default">Submit</button>
+    </div>
+  </div>
+
+  <div class="form-group api-response"></div>
+</form>
+<button type="button" onclick="show_inuse_table();" class="btn btn-default">Back</button>
